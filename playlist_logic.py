@@ -16,7 +16,7 @@ def normalize_title(title: str) -> str:
     """Normalize a song title for comparisons."""
     if not isinstance(title, str):
         return ""
-    return title.strip()
+    return title.strip().lower()
 
 
 def normalize_artist(artist: str) -> str:
@@ -183,6 +183,8 @@ def lucky_pick(
         songs = playlists.get("Hype", [])
     elif mode == "chill":
         songs = playlists.get("Chill", [])
+    elif mode == "mixed":
+        songs = playlists.get("Mixed", [])
     else:
         songs = (
             playlists.get("Hype", [])

@@ -25,7 +25,7 @@ def init_state():
 
 def default_songs():
     """Return a default list of songs."""
-    return [
+    return [normalize_song(song) for song in [
         {
             "title": "Thunderstruck",
             "artist": "AC/DC",
@@ -180,7 +180,7 @@ def default_songs():
             "energy": 6,
             "tags": ["soul", "vocal"],
         },
-    ]
+    ]]
 
 
 def profile_sidebar():
@@ -251,8 +251,15 @@ def add_song_sidebar():
         if title and artist:
             normalized = normalize_song(song)
             all_songs = st.session_state.songs[:]
-            all_songs.append(normalized)
-            st.session_state.songs = all_songs
+            is_duplicate = any(
+                s["title"] == normalized["title"] and s["artist"] == normalized["artist"]
+                for s in all_songs
+            )
+            if is_duplicate:
+                st.sidebar.warning("This song is already in your playlist.")
+            else:
+                all_songs.append(normalized)
+                st.session_state.songs = all_songs
 
 
 def playlist_tabs(playlists):
@@ -299,7 +306,7 @@ def lucky_section(playlists):
 
     mode = st.selectbox(
         "Pick from",
-        options=["any", "hype", "chill"],
+        options=["any", "hype", "chill", "mixed"],
         index=0,
     )
 
